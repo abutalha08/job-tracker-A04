@@ -55,7 +55,7 @@ const filterButtons = filterContainer.querySelectorAll('button');
 //   });
 
 
-//5 
+//5 collected all the job information and pushed it into the interviewList.
  availableJobContainer.addEventListener('click',function(event){
     const companyName = document.querySelector('.companyName').innerText;
     const positionName = document.querySelector('.positionName').innerText;
