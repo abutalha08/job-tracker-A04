@@ -1,19 +1,18 @@
-
 let interviewList = [];
 let rejectedList = [];
 
 // 1.
-let totalCount = document.getElementById('totalCount');
-let interviewCount = document.getElementById('interviewCount');
-let rejectedCount = document.getElementById('rejectedCount');
+let totalCount = document.getElementById("totalCount");
+let interviewCount = document.getElementById("interviewCount");
+let rejectedCount = document.getElementById("rejectedCount");
 
-const allJobCardSection = document.getElementById('allJobCards');
-const filterSection = document.getElementById('FilteredSection');
+const allJobCardSection = document.getElementById("allJobCards");
+const filterSection = document.getElementById("FilteredSection");
 
 // 3. Event delegation er jonno
-const availableJobContainer = document.querySelector('#availableJob');
+const availableJobContainer = document.querySelector("#availableJob");
 
-// 2. Function 
+// 2. Function for count
 function calculateCount() {
   totalCount.innerText = allJobCardSection.children.length;
   interviewCount.innerText = interviewList.length;
@@ -23,116 +22,121 @@ function calculateCount() {
 calculateCount();
 
 // 4. Filter buttons toggling
-const filterContainer = document.getElementById('filterButton');
-const filterButtons = filterContainer.querySelectorAll('button');
+const filterContainer = document.getElementById("filterButton");
+const filterButtons = filterContainer.querySelectorAll("button");
 
 for (let btn of filterButtons) {
-  btn.addEventListener('click', function () {
+  btn.addEventListener("click", function () {
     for (let b of filterButtons) {
-      b.classList.remove('bg-primary', 'text-white');
-      b.classList.add('btn-outline');
+      b.classList.remove("bg-primary", "text-white");
+      b.classList.add("btn-outline");
     }
-    btn.classList.add('bg-primary', 'text-white');
-    btn.classList.remove('btn-outline');
+    btn.classList.add("bg-primary", "text-white");
+    btn.classList.remove("btn-outline");
 
     // Filter section toggle
-    if (btn.id === 'allFilterBtn') {
-      filterSection.classList.add('hidden');
-      allJobCardSection.classList.remove('hidden');
+    if (btn.id === "allFilterBtn") {
+      filterSection.classList.add("hidden");
+      allJobCardSection.classList.remove("hidden");
     } else {
-      filterSection.classList.remove('hidden');
-      allJobCardSection.classList.add('hidden');
+      filterSection.classList.remove("hidden");
+      allJobCardSection.classList.add("hidden");
 
-     if (btn.id === 'interviewFilterBtn') {
-  renderList(interviewList, 'interview');
-} 
-else if (btn.id === 'rejectedFilterBtn') {
-  renderList(rejectedList, 'rejected');
-}
+      if (btn.id === "interviewFilterBtn") {
+        renderList(interviewList, "interview");
+      } else if (btn.id === "rejectedFilterBtn") {
+        renderList(rejectedList, "rejected");
+      }
     }
   });
 }
 
 // 5.Event delegation for interview/rejected buttons
-document.addEventListener('click', function (event) {
-
+document.addEventListener("click", function (event) {
   const target = event.target;
 
-  if (target.classList.contains('interviewBtn') || target.classList.contains('rejectedBtn')) {
+  if (
+    target.classList.contains("interviewBtn") ||
+    target.classList.contains("rejectedBtn")
+  ) {
+    const parentDiv = target.closest(".jobCard");
+    const companyName = parentDiv.querySelector(".companyName").innerText;
+    const positionName = parentDiv.querySelector(".positionName").innerText;
+    const locationText =
+      parentDiv.querySelector(".statusDescription").innerText;
 
-    const parentDiv = target.closest('.jobCard');
-    const companyName = parentDiv.querySelector('.companyName').innerText;
-    const positionName = parentDiv.querySelector('.positionName').innerText;
-    const locationText = parentDiv.querySelector('.statusDescription').innerText;
+    const locationTypeSalary = parentDiv.querySelector(".locationTypeSalary")
+      ? Array.from(parentDiv.querySelectorAll(".locationTypeSalary li"))
+          .map((li) => li.innerText)
+          .join(" | ")
+      : "";
 
-    const locationTypeSalary = parentDiv.querySelector('.locationTypeSalary')
-      ? Array.from(parentDiv.querySelectorAll('.locationTypeSalary li'))
-          .map(li => li.innerText)
-          .join(' | ')
-      : '';
-
-      //Create a object
+    //Create a object
     const cardInfo = {
       companyName,
       positionName,
       locationTypeSalary,
-      statusDescription: locationText
+      statusDescription: locationText,
     };
 
-
     //Interview Button Click
-    if (target.classList.contains('interviewBtn')) {
-
+    if (target.classList.contains("interviewBtn")) {
       // Remove from rejected
-      rejectedList = rejectedList.filter(item => item.companyName !== companyName);
+      rejectedList = rejectedList.filter(
+        (item) => item.companyName !== companyName,
+      );
 
       // interview te add korsi jodi na thake
-      if (!interviewList.find(item => item.companyName === companyName)) {
+      if (!interviewList.find((item) => item.companyName === companyName)) {
         interviewList.push(cardInfo);
       }
 
-      parentDiv.querySelector('.statusBtn').innerText = 'Interview';
+      parentDiv.querySelector(".statusBtn").innerText = "Interview";
     }
 
     //Rejected Button Click
-    else if (target.classList.contains('rejectedBtn')) {
-
+    else if (target.classList.contains("rejectedBtn")) {
       // Remove from interview
-      interviewList = interviewList.filter(item => item.companyName !== companyName);
+      interviewList = interviewList.filter(
+        (item) => item.companyName !== companyName,
+      );
 
       // Add to rejected jodi na thake
-      if (!rejectedList.find(item => item.companyName === companyName)) {
+      if (!rejectedList.find((item) => item.companyName === companyName)) {
         rejectedList.push(cardInfo);
       }
 
-      parentDiv.querySelector('.statusBtn').innerText = 'Rejected';
+      parentDiv.querySelector(".statusBtn").innerText = "Rejected";
     }
 
     calculateCount();
 
-    if (!filterSection.classList.contains('hidden')) {
-      const activeBtn = document.querySelector('#filterButton .bg-primary');
+    if (!filterSection.classList.contains("hidden")) {
+      const activeBtn = document.querySelector("#filterButton .bg-primary");
 
-      if (activeBtn.id === 'interviewFilterBtn') {
-        renderList(interviewList, 'interview');
-      } 
-      else if (activeBtn.id === 'rejectedFilterBtn') {
-        renderList(rejectedList, 'rejected');
+      if (activeBtn.id === "interviewFilterBtn") {
+        renderList(interviewList, "interview");
+      } else if (activeBtn.id === "rejectedFilterBtn") {
+        renderList(rejectedList, "rejected");
       }
     }
   }
 
   //For Delete Button
-  if (target.closest('.deleteBtn')) {
-    const card = target.closest('.jobCard');
+  if (target.closest(".deleteBtn")) {
+    const card = target.closest(".jobCard");
 
     if (allJobCardSection.contains(card)) {
-      const companyName = card.querySelector('.companyName').innerText;
+      const companyName = card.querySelector(".companyName").innerText;
 
       card.remove();
 
-      interviewList = interviewList.filter(item => item.companyName !== companyName);
-      rejectedList = rejectedList.filter(item => item.companyName !== companyName);
+      interviewList = interviewList.filter(
+        (item) => item.companyName !== companyName,
+      );
+      rejectedList = rejectedList.filter(
+        (item) => item.companyName !== companyName,
+      );
 
       calculateCount();
     }
@@ -141,13 +145,12 @@ document.addEventListener('click', function (event) {
 
 // render filtered list
 
-function renderList(list, type = '') {
-  filterSection.innerHTML = '';
+function renderList(list, type = "") {
+  filterSection.innerHTML = "";
 
-//     // Update the job count dynamically
-//   const jobCountSpan = document.getElementById('jobCount');
-//   jobCountSpan.innerText = `${list.length} of ${allJobCardSection.children.length}`;
-
+  // give the functionality on the job count dynamically
+  const jobCountSpan = document.getElementById("jobCount");
+  jobCountSpan.innerText = `${list.length} of ${allJobCardSection.children.length}`;
 
   if (list.length === 0) {
     filterSection.innerHTML = `
@@ -162,8 +165,8 @@ function renderList(list, type = '') {
 
   // list e item thakle
   for (let item of list) {
-    const div = document.createElement('div');
-    div.className = 'jobCard p-6 rounded-lg bg-[#F1F2F4] flex justify-between';
+    const div = document.createElement("div");
+    div.className = "jobCard p-6 rounded-lg bg-[#F1F2F4] flex justify-between";
     div.innerHTML = `
       <div class="space-y-4">
         <div>
@@ -175,7 +178,7 @@ function renderList(list, type = '') {
         </div>
         <div>
           <button class="btn bg-primary-content text-[#002C5C] mb-4 statusBtn">
-            ${type === 'interview' ? 'Interview' : 'Rejected'}
+            ${type === "interview" ? "Interview" : "Rejected"}
           </button>
           <p class="font-normal text-[14px] text-[#323B49] statusDescription">${item.statusDescription}</p>
         </div>

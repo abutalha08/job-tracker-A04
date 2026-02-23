@@ -1,4 +1,4 @@
-# JavaScript DOM & Event Handling Notes
+# JavaScript DOM & Event Handling
 
 This document explains some important JavaScript DOM selection methods and event concepts.
 
