@@ -22,7 +22,7 @@ function calculateCount(){
 calculateCount();
 
 
-//4
+//4 toggling buttons 
 const filterContainer = document.getElementById('filterButton');
 const filterButtons = filterContainer.querySelectorAll('button');
 
